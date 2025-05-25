@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>!!! SYSTEM FAILURE DETECTED !!!</title>
+  <style>
+    /* Genel ayarlar */
+    html, body {
+      margin: 0; padding: 0;
+      height: 100%;
+      background: black;
+      color: lime;
+      font-family: 'Courier New', Courier, monospace;
+      overflow: hidden;
+      user-select: none;
+    }
+
+    /* Terminal efektli yazı alanı */
+    #terminal {
+      padding: 20px;
+      white-space: pre-wrap;
+      font-size: 16px;
+      height: 100vh;
+      overflow-y: hidden;
+      animation: blink 1s step-start infinite;
+    }
+    @keyframes blink {
+      50% {opacity: 0.7;}
+    }
+
+    /* WARNING kırmızı ve yanıp sönme */
+    .warning {
+      position: fixed;
+      top: 20%;
+      left: 50%;
+      transform: translateX(-50%);
+      color: red;
+      font-size: 36px;
+      font-weight: 900;
+      animation: flash 0.7s infinite;
+      z-index: 9999;
+      text-shadow: 0 0 8px red;
+    }
+    @keyframes flash {
+      0%, 100% {opacity: 1;}
+      50% {opacity: 0;}
+    }
+
+    /* BSOD mavi ekran */
+    #bsod {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: #0000aa;
+      color: white;
+      font-family: monospace;
+      font-size: 18px;
+      padding: 30px;
+      text-align: left;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      z-index: 99999;
+      user-select: none;
+    }
+
+    /* Virus reklam uyarısı */
+    #virusAd {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      background: #ff0000;
+      color: white;
+      text-align: center;
+      font-weight: bold;
+      padding: 12px;
+      font-size: 22px;
+      animation: flash 0.7s infinite;
+      z-index: 99999;
+      user-select: none;
+      cursor: pointer;
+    }
+
+    /* Kırmızı hızlı kayan sistem hataları */
+    #errorStream {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      color: #ff0000;
+      font-weight: bold;
+      font-size: 28px;
+      text-shadow: 0 0 10px red;
+      overflow: hidden;
+      z-index: 9998;
+    }
+
+    .errorLine {
+      position: absolute;
+      white-space: nowrap;
+      animation-timing-function: linear;
+      user-select: none;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+
+<div class="warning">!!! SYSTEM FAILURE DETECTED !!!</div>
+
+<!-- Terminal metin alanı -->
+<pre id="terminal"></pre>
+
+<!-- Kırmızı hızlı kayan hata yazıları -->
+<div id="errorStream"></div>
+
+<!-- Virus reklam uyarısı -->
+<div id="virusAd" onclick="alert('Temizleme işlemi başlatılamadı. Lütfen gerçek antivirüs kullanınız!')">
+  ⚠️ VİRÜS BULUNDU! Bilgisayarınıza zararlı yazılım bulaşmış olabilir. TEMİZLEMEK için TIKLAYIN!
+</div>
+
+<!-- BSOD ekran -->
+<div id="bsod" style="display:none;flex;">
+  <h1>:(</h1>
+  <p>Your PC ran into a problem and needs to restart. We're just collecting some error info, and then we'll restart for you.</p>
+  <p>Stop Code: CRITICAL_PROCESS_DIED</p>
+  <p>If you'd like to know more, you can search online later for this error.</p>
+</div>
+
+<!-- Sesler -->
+<audio id="glitchSound" src="https://www.soundjay.com/button/sounds/beep-10.mp3" preload="auto"></audio>
+<audio id="alarmSound" src="https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3" preload="auto"></audio>
+<audio id="errorBeep" src="https://www.soundjay.com/button/sounds/beep-07.mp3" preload="auto"></audio>
+<audio id="startupNoise" src="https://www.soundjay.com/button/sounds/beep-09.mp3" preload="auto"></audio>
+<audio id="siren" src="https://www.soundjay.com/phone/sounds/telephone-ring-03a.mp3" preload="auto"></audio>
+<audio id="errorLoop" src="https://www.soundjay.com/misc/sounds/fail-buzzer-02.mp3" preload="auto" loop></audio>
+
+<script>
+  const terminal = document.getElementById('terminal');
+  const bsod = document.getElementById('bsod');
+  const virusAd = document.getElementById('virusAd');
+  const errorStream = document.getElementById('errorStream');
+
+  const glitchSound = document.getElementById('glitchSound');
+  const alarmSound = document.getElementById('alarmSound');
+  const errorBeep = document.getElementById('errorBeep');
+  const startupNoise = document.getElementById('startupNoise');
+  const siren = document.getElementById('siren');
+  const errorLoop = document.getElementById('errorLoop');
+
+  // Terminal'de gösterilecek metinler
+  const lines = [
+    "Initializing system scan...",
+    "Scanning port 443...",
+    "Found unauthorized packet (ID: 82713XF)...",
+    "Injecting payload...",
+    "Accessing C:\\System32\\config\\SAM...",
+    "Decrypting password hashes...",
+    "Found admin password: ********",
+    "Connecting to remote server...",
+    "Uploading files...",
+    "File 1/5 uploaded.",
+    "File 2/5 uploaded.",
+    "File 3/5 uploaded.",
+    "Firewall bypassed.",
+    "ALERT: Unauthorized access detected.",
+    "Triggering lockdown sequence...",
+    "LOCKDOWN IN PROGRESS...",
+    "CRITICAL ERROR DETECTED...",
+    "SYSTEM FAILURE...",
+  ];
+
+  // Random system error mesajları (hızlı kayan)
+  const errorMessages = [
+    "SYSTEM ERROR: 0x80070057",
+    "CRITICAL FAILURE: STACK_OVERFLOW",
+    "FATAL EXCEPTION AT 0x00AB12FF",
+    "ACCESS VIOLATION at 0x00456C2A",
+    "ILLEGAL INSTRUCTION EXECUTED",
+    "MEMORY LEAK DETECTED",
+    "PAGE_FAULT_IN_NONPAGED_AREA",
+    "KERNEL_SECURITY_CHECK_FAILURE",
+    "IRQL_NOT_LESS_OR_EQUAL",
+    "BAD_POOL_HEADER",
+    "DRIVER_IRQL_NOT_LESS_OR_EQUAL",
+    "SYSTEM_SERVICE_EXCEPTION",
+    "UNEXPECTED_KERNEL_MODE_TRAP",
+    "CRITICAL_PROCESS_DIED",
+    "BOOT_CONFIGURATION_DATA_CORRUPT",
+    "UNMOUNTABLE_BOOT_VOLUME",
+    "INACCESSIBLE_BOOT_DEVICE",
+  ];
+
+  // Terminalde yazıları göstermek
+  let lineIndex = 0;
+  function showLines() {
+    if (lineIndex < lines.length) {
+      terminal.textContent += lines[lineIndex] + "\n";
+      if (lineIndex > 5 && lineIndex % 2 === 0) errorBeep.play();
+      if (lineIndex === 8) siren.play();
+      lineIndex++;
+      setTimeout(showLines, 250 + Math.random() * 250);
+    } else {
+      alarmSound.play();
+      errorLoop.play();
+      setTimeout(showBSOD, 2500);
+    }
+  }
+
+  // BSOD ekranını aç
+  function showBSOD() {
+    terminal.style.display = 'none';
+    document.querySelector('.warning').style.display = 'none';
+    virusAd.style.display = 'none';
+    errorStream.style.display = 'none';
+    errorLoop.pause();
+    errorLoop.currentTime = 0;
+    bsod.style.display = 'flex';
+  }
+
+  // Kayan hata satırları oluşturma ve animasyon
+  function createErrorLine() {
+    const div = document.createElement('div');
+    div.className = 'errorLine';
+    div.textContent = errorMessages[Math.floor(Math.random() * errorMessages.length)];
+    errorStream.appendChild(div);
+
+    // Rastgele dikey pozisyon (y ekseni)
+    const maxY = window.innerHeight - 30;
+    const startY = Math.floor(Math.random() * maxY);
+    div.style.top = startY + 'px';
+
+    // Başlangıç solda ama görünmez (sağdan geliyormuş hissi için)
+    div.style.left = window.innerWidth + 'px';
+
+    // Hız (px/ms)
+    const speed = 1.5 + Math.random() * 2; // 1.5-3.5 px/ms
+
+    // Animasyon için başlangıç zamanı
+    let start = null;
+
+    function animate(timestamp) {
+      if (!start) start = timestamp;
+      const elapsed = timestamp - start;
+
+      // Yeni x pozisyonu
+      const newX = window.innerWidth - (elapsed * speed);
+
+      if (newX + div.offsetWidth < 0) {
+        // Ekrandan çıktı, kaldır
+        errorStream.removeChild(div);
+      } else {
+        div.style.left = newX + 'px';
+        requestAnimationFrame(animate);
+      }
+    }
+
+    requestAnimationFrame(animate);
+  }
+
+  // Sürekli kayan hata satırları oluştur
+  function startErrorStream() {
+    setInterval(() => {
+      if (errorStream.style.display !== 'none') {
+        createErrorLine();
+      }
+    }, 250);
+  }
+
+  // Sayfa açılır açılmaz sesleri sırayla çal
+  function playStartupSounds() {
+    startupNoise.volume = 0.4;
+    glitchSound.volume = 0.6;
+    siren.volume = 0.5;
+    alarmSound.volume = 0.8;
+    errorBeep.volume = 0.5;
+
+    // Başlangıç sesi
+    startupNoise.play();
+
+    // Kısa delay ile glitch sesi
+    setTimeout(() => {
+      glitchSound.play();
+    }, 600);
+
+    // Siren kısa aralıkla
+    setTimeout(() => {
+      siren.play();
+    }, 1500);
+
+    // Alarm sesini sonlara bırakıyoruz terminal bittikten sonra
+  }
+
+  window.onload = () => {
+    // Başlangıç seslerini başlat
+    playStartupSounds();
+
+    // Kayan hataları başlat
+    startErrorStream();
+
+    // Terminal metinlerini göster
+    showLines();
+  };
+</script>
+
+</body>
+</html>
